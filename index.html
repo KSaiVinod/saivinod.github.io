@@ -2296,6 +2296,7 @@
     const SECTION_VISIBILITY_THRESHOLD = 0.55;
     const STORAGE_KEY = 'sv-player-progress-v3';
     const SESSION_KEY = 'sv-player-session-id';
+    const SESSION_COUNTER_KEY = 'sv-player-session-counter';
     const API_BASE = window.location.origin;
     const SECTION_XP = { world: 40, quests: 120, treasures: 120, inventory: 90, guild: 90 };
 
@@ -2313,7 +2314,9 @@
 
     function makeSessionId() {
       if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-      return `sess_${Date.now().toString(36)}_${Math.floor(performance.now()).toString(36)}`;
+      const seq = Number(localStorage.getItem(SESSION_COUNTER_KEY) || '0') + 1;
+      localStorage.setItem(SESSION_COUNTER_KEY, String(seq));
+      return `sess_${Date.now().toString(36)}_${Math.floor(performance.now()).toString(36)}_${seq.toString(36)}`;
     }
 
     function getSessionId() {
@@ -2610,7 +2613,7 @@
     function setupChestMap() {
       document.querySelectorAll('.chest').forEach((chest) => {
         const onClickValue = chest.getAttribute('onclick') || '';
-        const match = onClickValue.match(/openChest\\('([^']+)'\\)/);
+        const match = onClickValue.match(/openChest\('([^']+)'\)/);
         if (match && match[1]) chestElementMap.set(match[1], chest);
       });
     }

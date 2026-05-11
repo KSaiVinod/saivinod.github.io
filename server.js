@@ -167,7 +167,7 @@ function serveStatic(pathname, res) {
     sendJson(res, 400, { error: 'invalid_path' });
     return;
   }
-  if (path.includes('\0') || path.includes('..') || path.includes('\\')) {
+  if (path.includes('\0') || path.includes('..')) {
     sendJson(res, 403, { error: 'forbidden' });
     return;
   }
