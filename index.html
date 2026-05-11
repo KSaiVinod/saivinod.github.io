@@ -2299,6 +2299,9 @@
     const XP_PER_LEVEL = 420;
     const MAX_LEVEL = 10;
     const SECTION_VISIBILITY_THRESHOLD = 0.55;
+    const CLIENT_MAX_PROGRESS_LIST_LENGTH = 200;
+    const MOVEMENT_COOLDOWN_MS = 90;
+    const SCROLL_BOTTOM_THRESHOLD = 2;
     const STORAGE_KEY = 'sv-player-progress-v3';
     const SESSION_KEY = 'sv-player-session-id';
     const SESSION_COUNTER_KEY = 'sv-player-session-counter';
@@ -2330,7 +2333,7 @@
     }
 
     function sanitizeClientProgress(data) {
-      const list = (value) => Array.isArray(value) ? value.map((item) => String(item)).slice(0, 300) : [];
+      const list = (value) => Array.isArray(value) ? value.map((item) => String(item)).slice(0, CLIENT_MAX_PROGRESS_LIST_LENGTH) : [];
       const xp = Number.isFinite(Number(data.xp)) ? Math.max(0, Math.min(Number(data.xp), XP_PER_LEVEL * MAX_LEVEL)) : 0;
       const level = Number.isFinite(Number(data.level)) ? Math.max(1, Math.min(Number(data.level), MAX_LEVEL)) : 1;
       const skillClicks = Number.isFinite(Number(data.skillClicks)) ? Math.max(0, Math.min(Number(data.skillClicks), 500)) : 0;
@@ -2511,7 +2514,7 @@
       ];
       const tile = 20;
       const start = { x: 1, y: 1 };
-      const enemyStart = [
+      const ENEMY_PATROL_ZONES = [
         { x: 7, y: 3, dir: 1, axis: 'x', min: 4, max: 11 },
         { x: 17, y: 6, dir: -1, axis: 'x', min: 14, max: 21 }
       ];
@@ -2538,7 +2541,7 @@
         player.x = start.x;
         player.y = start.y;
         won = false;
-        enemies = enemyStart.map((enemy) => ({ ...enemy }));
+        enemies = ENEMY_PATROL_ZONES.map((enemy) => ({ ...enemy }));
         relics = relicStart.map((relic) => ({ ...relic }));
         statusEl.textContent = message;
       }
@@ -2578,7 +2581,7 @@
       function movePlayer(dx, dy) {
         if (won || moveLock) return;
         moveLock = true;
-        setTimeout(() => { moveLock = false; }, 90);
+        setTimeout(() => { moveLock = false; }, MOVEMENT_COOLDOWN_MS);
         const nx = player.x + dx;
         const ny = player.y + dy;
         if (isBlocked(nx, ny)) return;
@@ -2794,7 +2797,7 @@
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const viewportHeight = window.innerHeight;
         const totalHeight = document.documentElement.scrollHeight;
-        if (scrollTop + viewportHeight >= totalHeight - 2) {
+        if (scrollTop + viewportHeight >= totalHeight - SCROLL_BOTTOM_THRESHOLD) {
           unlockedByBottom = true;
           unlockReward();
           syncRewardUI();
