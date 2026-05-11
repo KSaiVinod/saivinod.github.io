@@ -1468,48 +1468,53 @@
       margin-bottom: 12px;
     }
 
-    .rune-hunt {
+    .zelda-game {
       position: relative;
-      height: 120px;
-      border: 1px dashed rgba(0, 245, 196, 0.25);
-      background: linear-gradient(160deg, rgba(0, 245, 196, 0.04), rgba(168, 85, 247, 0.05));
+      border: 1px solid rgba(0, 245, 196, 0.25);
+      background: linear-gradient(160deg, rgba(0, 245, 196, 0.05), rgba(168, 85, 247, 0.08));
+      padding: 8px;
       overflow: hidden;
     }
 
-    .hidden-rune {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      border: 1px solid rgba(255, 215, 0, 0.7);
-      background: rgba(255, 215, 0, 0.1);
-      color: var(--accent4);
-      font-size: 14px;
+    #zelda-canvas {
+      width: 100%;
+      max-width: 520px;
+      height: 200px;
+      border: 1px solid rgba(224, 224, 255, 0.2);
+      image-rendering: pixelated;
+      background: #0f1e16;
+    }
+
+    .hero-quest-controls {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .hero-quest-controls span {
+      font-family: 'VT323';
+      font-size: 19px;
+      color: var(--text2);
+      letter-spacing: 1px;
+    }
+
+    .hero-quest-controls button {
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+      background: rgba(255, 107, 53, 0.12);
+      font-family: 'Press Start 2P';
+      font-size: 7px;
+      padding: 8px 10px;
       cursor: pointer;
-      animation: rune-bob 2.5s ease-in-out infinite;
-      transition: transform 0.2s, opacity 0.2s;
+      letter-spacing: 1px;
     }
 
-    .hidden-rune:hover {
-      transform: scale(1.15);
-      box-shadow: 0 0 14px rgba(255, 215, 0, 0.35);
-    }
-
-    .hidden-rune.found {
-      opacity: 0;
-      transform: scale(0.3) rotate(45deg);
-      pointer-events: none;
-    }
-
-    @keyframes rune-bob {
-
-      0%,
-      100% {
-        transform: translateY(0)
-      }
-
-      50% {
-        transform: translateY(-4px)
-      }
+    .hero-quest-controls button:hover {
+      background: rgba(255, 107, 53, 0.2);
+      box-shadow: 0 0 12px rgba(255, 107, 53, 0.3);
     }
 
     .hero-quest-progress {
@@ -1751,16 +1756,16 @@
         <a href="#guild" class="zone-btn z4">Guild Hall</a>
       </div>
       <div class="hero-quest" id="hero-quest">
-        <div class="hero-quest-title">RUNE HUNT: FIND 5 ARCANE RUNES</div>
-        <div class="hero-quest-sub">COLLECT THEM TO BOOST YOUR XP</div>
-        <div class="rune-hunt" id="rune-hunt">
-          <button class="hidden-rune" data-rune="r1" aria-label="Collect rune one" style="top:10%;left:12%">✶</button>
-          <button class="hidden-rune" data-rune="r2" aria-label="Collect rune two" style="top:18%;right:14%">◈</button>
-          <button class="hidden-rune" data-rune="r3" aria-label="Collect rune three" style="bottom:22%;left:20%">✦</button>
-          <button class="hidden-rune" data-rune="r4" aria-label="Collect rune four" style="bottom:14%;right:18%">◇</button>
-          <button class="hidden-rune" data-rune="r5" aria-label="Collect rune five" style="top:48%;right:6%">✧</button>
+        <div class="hero-quest-title">MINI ZELDA: FOREST TRIAL</div>
+        <div class="hero-quest-sub">MOVE WITH ARROWS/WASD · COLLECT 3 RELICS · AVOID ENEMIES</div>
+        <div class="zelda-game" id="zelda-game">
+          <canvas id="zelda-canvas" width="520" height="200" aria-label="Playable Zelda style mini game"></canvas>
+          <div class="hero-quest-controls">
+            <span>YOU: ▣ · RELICS: ◇ · ENEMIES: ◆</span>
+            <button type="button" id="zelda-restart">RESTART</button>
+          </div>
         </div>
-        <div class="hero-quest-progress" id="rune-progress">0 / 5 RUNES</div>
+        <div class="hero-quest-progress" id="zelda-status">RELICS: 0 / 3</div>
       </div>
     </div>
     <div class="scroll-hint">
@@ -2215,7 +2220,7 @@
         SAIVINODK</a>
     </div>
     <div class="reward-panel" id="reward-panel">
-      <div class="reward-status" id="reward-status">🔒 REWARD LOCKED · REACH LEVEL 10 TO UNLOCK CONTACT QUEST</div>
+      <div class="reward-status" id="reward-status">🔒 REWARD LOCKED · SCROLL TO THE BOTTOM TO OPEN CONTACT QUEST</div>
       <form id="reward-form" class="reward-form" autocomplete="off">
         <input type="text" id="contact-name" name="name" placeholder="YOUR NAME" required>
         <input type="email" id="contact-email" name="email" placeholder="YOUR EMAIL" required>
@@ -2400,20 +2405,20 @@
       const panel = document.getElementById('reward-panel');
       const status = document.getElementById('reward-status');
       panel.classList.add('unlocked');
-      status.textContent = '🔓 REWARD UNLOCKED · CONTACT QUEST AVAILABLE';
-      showToast('REWARD UNLOCKED: CONTACT QUEST!');
+      status.textContent = '🔓 CONTACT QUEST OPENED · YOU REACHED THE END OF THE PAGE';
+      showToast('CONTACT QUEST OPENED!');
     }
 
     function syncRewardUI() {
       const panel = document.getElementById('reward-panel');
       const status = document.getElementById('reward-status');
-      if (progress.level >= MAX_LEVEL || progress.rewardUnlocked) {
+      if (progress.rewardUnlocked) {
         progress.rewardUnlocked = true;
         panel.classList.add('unlocked');
-        status.textContent = '🔓 REWARD UNLOCKED · CONTACT QUEST AVAILABLE';
+        status.textContent = '🔓 CONTACT QUEST OPENED · YOU REACHED THE END OF THE PAGE';
       } else {
         panel.classList.remove('unlocked');
-        status.textContent = '🔒 REWARD LOCKED · REACH LEVEL 10 TO UNLOCK CONTACT QUEST';
+        status.textContent = '🔒 REWARD LOCKED · SCROLL TO THE BOTTOM TO OPEN CONTACT QUEST';
       }
     }
 
@@ -2439,10 +2444,7 @@
     }
 
     function addXP(amount, reason) {
-      if (progress.level >= MAX_LEVEL) {
-        syncRewardUI();
-        return;
-      }
+      if (progress.level >= MAX_LEVEL) return;
       const before = progress.level;
       const maxXp = XP_PER_LEVEL * MAX_LEVEL;
       progress.xp = Math.min(maxXp, progress.xp + amount);
@@ -2450,7 +2452,6 @@
       if (reason) showToast(`+${amount} XP · ${reason}`);
       const after = progress.level;
       if (after > before) showLevelUp(before, after);
-      if (after >= MAX_LEVEL) unlockReward();
       scheduleSave();
     }
 
@@ -2477,13 +2478,6 @@
       }
     }
 
-    function gainXP(type = 'skill') {
-      if (type !== 'skill') return;
-      const step = progress.skillClicks < 12 ? 18 : 6;
-      progress.skillClicks += 1;
-      addXP(step, 'SKILL INSPECTED');
-    }
-
     function setupSectionTracking() {
       const sections = Array.from(document.querySelectorAll('section[id]'));
       const obs = new IntersectionObserver((entries) => {
@@ -2498,26 +2492,148 @@
       sections.forEach((sec) => obs.observe(sec));
     }
 
-    function setupRuneHunt() {
-      const runes = document.querySelectorAll('.hidden-rune');
-      const progressEl = document.getElementById('rune-progress');
-      runes.forEach((rune) => {
-        rune.addEventListener('click', () => {
-          const id = rune.dataset.rune;
-          if (!markUnique('foundRunes', id)) return;
-          rune.classList.add('found');
-          progressEl.textContent = `${progress.foundRunes.length} / ${runes.length} RUNES`;
-          addXP(110, 'ARCANE RUNE FOUND');
-          if (progress.foundRunes.length === runes.length) {
-            showToast('RUNE HUNT COMPLETE · TREASURE DISCOVERED!');
-          }
+    function setupZeldaGame() {
+      const canvas = document.getElementById('zelda-canvas');
+      const statusEl = document.getElementById('zelda-status');
+      const restartBtn = document.getElementById('zelda-restart');
+      if (!canvas || !statusEl || !restartBtn) return;
+      const ctx = canvas.getContext('2d');
+      const map = [
+        '##########################',
+        '#..~....#....~......#...#',
+        '#..~....#....~......#...#',
+        '#......##...........#...#',
+        '#..............##.......#',
+        '#....##.....~.......~...#',
+        '#....##.....~.......~...#',
+        '#..........#............#',
+        '##########################'
+      ];
+      const tile = 20;
+      const start = { x: 1, y: 1 };
+      const enemyStart = [
+        { x: 7, y: 3, dir: 1, axis: 'x', min: 4, max: 11 },
+        { x: 17, y: 6, dir: -1, axis: 'x', min: 14, max: 21 }
+      ];
+      const relicStart = [
+        { x: 4, y: 6 },
+        { x: 13, y: 2 },
+        { x: 21, y: 5 }
+      ];
+      const player = { x: start.x, y: start.y };
+      let enemies = [];
+      let relics = [];
+      let won = false;
+      let moveLock = false;
+      const controls = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, w: false, a: false, s: false, d: false };
+
+      function isBlocked(x, y) {
+        const row = map[y];
+        if (!row) return true;
+        const cell = row[x];
+        return !cell || cell === '#';
+      }
+
+      function resetGame(message = 'RELICS: 0 / 3') {
+        player.x = start.x;
+        player.y = start.y;
+        won = false;
+        enemies = enemyStart.map((enemy) => ({ ...enemy }));
+        relics = relicStart.map((relic) => ({ ...relic }));
+        statusEl.textContent = message;
+      }
+
+      function updateStatus() {
+        const found = relicStart.length - relics.length;
+        statusEl.textContent = won ? 'TRIAL COMPLETE! YOU CLEARED THE DUNGEON.' : `RELICS: ${found} / ${relicStart.length}`;
+      }
+
+      function moveEnemies() {
+        enemies.forEach((enemy) => {
+          enemy[enemy.axis] += enemy.dir;
+          if (enemy[enemy.axis] <= enemy.min || enemy[enemy.axis] >= enemy.max) enemy.dir *= -1;
         });
+      }
+
+      function handleCollision() {
+        if (enemies.some((enemy) => enemy.x === player.x && enemy.y === player.y)) {
+          player.x = start.x;
+          player.y = start.y;
+          statusEl.textContent = 'YOU WERE HIT! RETURNED TO START.';
+        }
+      }
+
+      function collectRelic() {
+        const before = relics.length;
+        relics = relics.filter((relic) => !(relic.x === player.x && relic.y === player.y));
+        if (relics.length !== before) {
+          updateStatus();
+          if (relics.length === 0) {
+            won = true;
+            updateStatus();
+          }
+        }
+      }
+
+      function movePlayer(dx, dy) {
+        if (won || moveLock) return;
+        moveLock = true;
+        setTimeout(() => { moveLock = false; }, 90);
+        const nx = player.x + dx;
+        const ny = player.y + dy;
+        if (isBlocked(nx, ny)) return;
+        player.x = nx;
+        player.y = ny;
+        collectRelic();
+        moveEnemies();
+        handleCollision();
+      }
+
+      function drawCell(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x * tile, y * tile, tile, tile);
+      }
+
+      function draw() {
+        map.forEach((row, y) => {
+          row.split('').forEach((cell, x) => {
+            if (cell === '#') drawCell(x, y, '#24312e');
+            else if (cell === '~') drawCell(x, y, '#234878');
+            else drawCell(x, y, '#17261f');
+          });
+        });
+        relics.forEach((relic) => drawCell(relic.x, relic.y, '#ffd700'));
+        enemies.forEach((enemy) => drawCell(enemy.x, enemy.y, '#ff6b35'));
+        drawCell(player.x, player.y, '#00f5c4');
+        requestAnimationFrame(draw);
+      }
+
+      function keyToDirection(eventKey) {
+        if (eventKey === 'ArrowUp' || eventKey === 'w') return [0, -1];
+        if (eventKey === 'ArrowDown' || eventKey === 's') return [0, 1];
+        if (eventKey === 'ArrowLeft' || eventKey === 'a') return [-1, 0];
+        if (eventKey === 'ArrowRight' || eventKey === 'd') return [1, 0];
+        return null;
+      }
+
+      document.addEventListener('keydown', (event) => {
+        const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+        const direction = keyToDirection(key);
+        if (!direction) return;
+        event.preventDefault();
+        if (controls[key]) return;
+        controls[key] = true;
+        movePlayer(direction[0], direction[1]);
+      }, { passive: false });
+
+      document.addEventListener('keyup', (event) => {
+        const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+        if (Object.prototype.hasOwnProperty.call(controls, key)) controls[key] = false;
       });
-      progressEl.textContent = `${progress.foundRunes.length} / ${runes.length} RUNES`;
-      progress.foundRunes.forEach((id) => {
-        const rune = Array.from(runes).find((item) => item.dataset.rune === id);
-        if (rune) rune.classList.add('found');
-      });
+
+      restartBtn.addEventListener('click', () => resetGame('TRIAL RESET · RELICS: 0 / 3'));
+      resetGame();
+      draw();
     }
 
     // Chest modals
@@ -2593,9 +2709,9 @@
         setTimeout(() => chest.classList.remove('loot-drop'), 450);
       }
       if (markUnique('openedProjects', id)) {
-        addXP(140, 'PROJECT CHEST OPENED');
+        showToast('PROJECT CHEST OPENED');
       } else {
-        addXP(20, 'PROJECT REVISITED');
+        showToast('PROJECT REVISITED');
       }
     }
     function closeModal(e) {
@@ -2671,12 +2787,32 @@
       });
     }
 
+    function setupBottomRewardUnlock() {
+      let unlockedByBottom = false;
+      function maybeUnlockByBottom() {
+        if (unlockedByBottom || progress.rewardUnlocked) return;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const viewportHeight = window.innerHeight;
+        const totalHeight = document.documentElement.scrollHeight;
+        if (scrollTop + viewportHeight >= totalHeight - 2) {
+          unlockedByBottom = true;
+          unlockReward();
+          syncRewardUI();
+          scheduleSave();
+        }
+      }
+      window.addEventListener('scroll', maybeUnlockByBottom, { passive: true });
+      window.addEventListener('resize', maybeUnlockByBottom);
+      maybeUnlockByBottom();
+    }
+
     (async function init() {
       setupQuestIds();
       setupChestMap();
       await hydrateProgress();
       setupSectionTracking();
-      setupRuneHunt();
+      setupZeldaGame();
+      setupBottomRewardUnlock();
       setupRewardForm();
     })();
   </script>
