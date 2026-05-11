@@ -2301,7 +2301,7 @@
     const SECTION_VISIBILITY_THRESHOLD = 0.55;
     const CLIENT_MAX_PROGRESS_LIST_LENGTH = 200;
     const MOVEMENT_COOLDOWN_MS = 90;
-    const SCROLL_BOTTOM_THRESHOLD = 2;
+    const SCROLL_BOTTOM_THRESHOLD_PX = 2;
     const STORAGE_KEY = 'sv-player-progress-v3';
     const SESSION_KEY = 'sv-player-session-id';
     const SESSION_COUNTER_KEY = 'sv-player-session-counter';
@@ -2321,7 +2321,7 @@
     };
 
     function makeSessionId() {
-      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
       if (window.crypto && crypto.getRandomValues) {
         const arr = new Uint32Array(2);
         crypto.getRandomValues(arr);
@@ -2416,7 +2416,6 @@
       const panel = document.getElementById('reward-panel');
       const status = document.getElementById('reward-status');
       if (progress.rewardUnlocked) {
-        progress.rewardUnlocked = true;
         panel.classList.add('unlocked');
         status.textContent = '🔓 CONTACT QUEST OPENED · YOU REACHED THE END OF THE PAGE';
       } else {
@@ -2797,7 +2796,7 @@
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const viewportHeight = window.innerHeight;
         const totalHeight = document.documentElement.scrollHeight;
-        if (scrollTop + viewportHeight >= totalHeight - SCROLL_BOTTOM_THRESHOLD) {
+        if (scrollTop + viewportHeight >= totalHeight - SCROLL_BOTTOM_THRESHOLD_PX) {
           unlockedByBottom = true;
           unlockReward();
           syncRewardUI();
