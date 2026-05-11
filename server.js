@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const publicDir = __dirname;
+const rootDir = __dirname;
 const dataDir = join(__dirname, 'data');
 const progressFile = join(dataDir, 'progress.json');
 const inboxFile = join(dataDir, 'contact-submissions.json');
@@ -15,7 +15,7 @@ const MAX_BODY_BYTES = 200000;
 const MAX_PROGRESS_LIST_LENGTH = 200;
 const EMAIL_ERROR_MESSAGE_LIMIT = 200;
 const MAX_SESSION_XP = 4200;
-const PUBLIC_DIR_RESOLVED = resolve(publicDir);
+const ROOT_DIR_RESOLVED = resolve(rootDir);
 let writeQueue = Promise.resolve();
 
 const mimeTypes = {
@@ -172,8 +172,11 @@ function serveStatic(pathname, res) {
     return;
   }
   const relativePath = path.replace(/^\/+/, '');
-  const filePath = resolve(publicDir, relativePath);
-  if (!filePath.startsWith(`${PUBLIC_DIR_RESOLVED}/`) && filePath !== PUBLIC_DIR_RESOLVED) {
+  const filePath = resolve(rootDir, relativePath);
+  const useCaseInsensitiveCheck = process.platform === 'win32' || process.platform === 'darwin';
+  const rootPathForCheck = useCaseInsensitiveCheck ? ROOT_DIR_RESOLVED.toLowerCase() : ROOT_DIR_RESOLVED;
+  const filePathForCheck = useCaseInsensitiveCheck ? filePath.toLowerCase() : filePath;
+  if (!filePathForCheck.startsWith(`${rootPathForCheck}/`) && filePathForCheck !== rootPathForCheck) {
     sendJson(res, 403, { error: 'forbidden' });
     return;
   }

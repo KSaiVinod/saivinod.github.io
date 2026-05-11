@@ -1928,7 +1928,7 @@
 
     <div class="chest-grid">
 
-      <div class="chest chest-c1" onclick="openChest('ownhook')">
+      <div class="chest chest-c1" data-chest-id="ownhook" onclick="openChest('ownhook')">
         <div class="chest-lid"></div>
         <div class="chest-corner tl"></div>
         <div class="chest-corner tr"></div>
@@ -1949,7 +1949,7 @@
         <div class="chest-date">2025 — APR 2026</div>
       </div>
 
-      <div class="chest chest-c3" onclick="openChest('meshcall')">
+      <div class="chest chest-c3" data-chest-id="meshcall" onclick="openChest('meshcall')">
         <div class="chest-lid"></div>
         <div class="chest-corner tl"></div>
         <div class="chest-corner tr"></div>
@@ -1969,7 +1969,7 @@
         <div class="chest-date">2024 — JUN 2025</div>
       </div>
 
-      <div class="chest chest-c2" onclick="openChest('biolinks')">
+      <div class="chest chest-c2" data-chest-id="biolinks" onclick="openChest('biolinks')">
         <div class="chest-lid"></div>
         <div class="chest-corner tl"></div>
         <div class="chest-corner tr"></div>
@@ -1991,7 +1991,7 @@
         <div class="chest-date">AUG 2020</div>
       </div>
 
-      <div class="chest chest-c4" onclick="openChest('kakeibo')">
+      <div class="chest chest-c4" data-chest-id="kakeibo" onclick="openChest('kakeibo')">
         <div class="chest-lid"></div>
         <div class="chest-corner tl"></div>
         <div class="chest-corner tr"></div>
@@ -2314,9 +2314,31 @@
 
     function makeSessionId() {
       if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      if (window.crypto && crypto.getRandomValues) {
+        const arr = new Uint32Array(2);
+        crypto.getRandomValues(arr);
+        return `sess_${arr[0].toString(36)}_${arr[1].toString(36)}`;
+      }
       const seq = Number(localStorage.getItem(SESSION_COUNTER_KEY) || '0') + 1;
       localStorage.setItem(SESSION_COUNTER_KEY, String(seq));
       return `sess_${Date.now().toString(36)}_${Math.floor(performance.now()).toString(36)}_${seq.toString(36)}`;
+    }
+
+    function sanitizeClientProgress(data) {
+      const list = (value) => Array.isArray(value) ? value.map((item) => String(item)).slice(0, 300) : [];
+      const xp = Number.isFinite(Number(data.xp)) ? Math.max(0, Math.min(Number(data.xp), XP_PER_LEVEL * MAX_LEVEL)) : 0;
+      const level = Number.isFinite(Number(data.level)) ? Math.max(1, Math.min(Number(data.level), MAX_LEVEL)) : 1;
+      const skillClicks = Number.isFinite(Number(data.skillClicks)) ? Math.max(0, Math.min(Number(data.skillClicks), 500)) : 0;
+      return {
+        xp,
+        level,
+        rewardUnlocked: Boolean(data.rewardUnlocked),
+        skillClicks,
+        visitedSections: list(data.visitedSections),
+        openedQuests: list(data.openedQuests),
+        openedProjects: list(data.openedProjects),
+        foundRunes: list(data.foundRunes)
+      };
     }
 
     function getSessionId() {
@@ -2586,13 +2608,13 @@
     async function hydrateProgress() {
       progress.sessionId = getSessionId();
       const localData = loadLocalProgress();
-      if (localData) Object.assign(progress, localData, { sessionId: progress.sessionId });
+      if (localData) Object.assign(progress, sanitizeClientProgress(localData), { sessionId: progress.sessionId });
       try {
         const res = await fetch(`${API_BASE}/api/progress?sessionId=${encodeURIComponent(progress.sessionId)}`);
         if (res.ok) {
           const remoteData = await res.json();
           if (remoteData && remoteData.progress) {
-            Object.assign(progress, remoteData.progress, { sessionId: progress.sessionId });
+            Object.assign(progress, sanitizeClientProgress(remoteData.progress), { sessionId: progress.sessionId });
           }
         }
       } catch (err) {
@@ -2612,9 +2634,8 @@
 
     function setupChestMap() {
       document.querySelectorAll('.chest').forEach((chest) => {
-        const onClickValue = chest.getAttribute('onclick') || '';
-        const match = onClickValue.match(/openChest\('([^']+)'\)/);
-        if (match && match[1]) chestElementMap.set(match[1], chest);
+        const chestId = chest.dataset.chestId;
+        if (chestId) chestElementMap.set(chestId, chest);
       });
     }
 
