@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createReadStream, existsSync } from 'node:fs';
-import { extname, join, dirname } from 'node:path';
+import { extname, join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,7 +15,7 @@ const MAX_BODY_BYTES = 200000;
 const MAX_PROGRESS_LIST_LENGTH = 200;
 const EMAIL_ERROR_MESSAGE_LIMIT = 200;
 const MAX_SESSION_XP = 4200;
-const STATIC_FILE_ALLOWLIST = new Set(['index.html', 'CNAME', 'README.md']);
+const PUBLIC_DIR_RESOLVED = resolve(publicDir);
 let writeQueue = Promise.resolve();
 
 const mimeTypes = {
@@ -159,18 +159,24 @@ function sanitizeMessage(body) {
   };
 }
 
-function serveStatic(req, res) {
-  const path = req.url === '/' ? '/index.html' : req.url;
-  if (!/^\/[a-zA-Z0-9._-]+$/.test(path)) {
+function serveStatic(pathname, res) {
+  let path = pathname === '/' ? '/index.html' : pathname;
+  try {
+    path = decodeURIComponent(path);
+  } catch {
+    sendJson(res, 400, { error: 'invalid_path' });
+    return;
+  }
+  if (path.includes('\0') || path.includes('..') || path.includes('\\')) {
     sendJson(res, 403, { error: 'forbidden' });
     return;
   }
-  const fileName = path.slice(1);
-  if (!STATIC_FILE_ALLOWLIST.has(fileName)) {
-    sendJson(res, 404, { error: 'not_found' });
+  const relativePath = path.replace(/^\/+/, '');
+  const filePath = resolve(publicDir, relativePath);
+  if (!filePath.startsWith(`${PUBLIC_DIR_RESOLVED}/`) && filePath !== PUBLIC_DIR_RESOLVED) {
+    sendJson(res, 403, { error: 'forbidden' });
     return;
   }
-  const filePath = join(publicDir, fileName);
   const extension = extname(filePath).toLowerCase();
 
   if (!existsSync(filePath)) {
@@ -238,7 +244,7 @@ const server = createServer(async (req, res) => {
       return sendJson(res, 404, { error: 'api_route_not_found' });
     }
 
-    serveStatic(req, res);
+    serveStatic(url.pathname, res);
   } catch (err) {
     sendJson(res, 500, { error: 'internal_error', message: err.message });
   }

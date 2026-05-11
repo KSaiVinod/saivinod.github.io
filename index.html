@@ -2538,6 +2538,7 @@
         xp: '+500 XP'
       }
     };
+    const chestElementMap = new Map();
 
     function openChest(id) {
       const d = chestData[id];
@@ -2561,7 +2562,7 @@
         tagsEl.appendChild(span);
       });
       document.getElementById('modal').classList.add('open');
-      const chest = Array.from(document.querySelectorAll('.chest')).find((item) => item.getAttribute('onclick') === `openChest('${id}')`);
+      const chest = chestElementMap.get(id);
       if (chest) {
         chest.classList.add('loot-drop');
         setTimeout(() => chest.classList.remove('loot-drop'), 450);
@@ -2606,6 +2607,14 @@
       });
     }
 
+    function setupChestMap() {
+      document.querySelectorAll('.chest').forEach((chest) => {
+        const onClickValue = chest.getAttribute('onclick') || '';
+        const match = onClickValue.match(/openChest\\('([^']+)'\\)/);
+        if (match && match[1]) chestElementMap.set(match[1], chest);
+      });
+    }
+
     function setupRewardForm() {
       const form = document.getElementById('reward-form');
       form.addEventListener('submit', async (event) => {
@@ -2640,6 +2649,7 @@
 
     (async function init() {
       setupQuestIds();
+      setupChestMap();
       await hydrateProgress();
       setupSectionTracking();
       setupRuneHunt();
