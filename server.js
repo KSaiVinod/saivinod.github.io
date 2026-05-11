@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createReadStream, existsSync } from 'node:fs';
-import { extname, join, resolve, dirname } from 'node:path';
+import { extname, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,7 +15,7 @@ const MAX_BODY_BYTES = 200000;
 const MAX_PROGRESS_LIST_LENGTH = 200;
 const EMAIL_ERROR_MESSAGE_LIMIT = 200;
 const MAX_SESSION_XP = 4200;
-const PUBLIC_DIR_RESOLVED = resolve(publicDir);
+const STATIC_FILE_ALLOWLIST = new Set(['index.html', 'CNAME', 'README.md']);
 let writeQueue = Promise.resolve();
 
 const mimeTypes = {
@@ -56,7 +56,7 @@ async function writeJson(filePath, value) {
 }
 
 function enqueueWrite(task) {
-  writeQueue = writeQueue.then(task, task);
+  writeQueue = writeQueue.catch(() => undefined).then(task);
   return writeQueue;
 }
 
@@ -161,12 +161,16 @@ function sanitizeMessage(body) {
 
 function serveStatic(req, res) {
   const path = req.url === '/' ? '/index.html' : req.url;
-  const decodedPath = decodeURIComponent(path).replace(/^\/+/, '');
-  const filePath = resolve(publicDir, decodedPath);
-  if (!filePath.startsWith(`${PUBLIC_DIR_RESOLVED}/`) && filePath !== PUBLIC_DIR_RESOLVED) {
+  if (!/^\/[a-zA-Z0-9._-]+$/.test(path)) {
     sendJson(res, 403, { error: 'forbidden' });
     return;
   }
+  const fileName = path.slice(1);
+  if (!STATIC_FILE_ALLOWLIST.has(fileName)) {
+    sendJson(res, 404, { error: 'not_found' });
+    return;
+  }
+  const filePath = join(publicDir, fileName);
   const extension = extname(filePath).toLowerCase();
 
   if (!existsSync(filePath)) {
