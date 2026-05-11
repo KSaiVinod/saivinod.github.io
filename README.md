@@ -224,3 +224,22 @@ An expense manager inspired by the Japanese **Kakeibo** philosophy. Tracks spend
 
 
 **© 2026 Sai Vinod Konakanchi** 
+
+---
+
+## 🧪 Local Backend (Progress + Contact Reward)
+
+- Run the local server:
+  - `npm install`
+  - `npm start`
+- Site + APIs run on `http://localhost:3000`
+- Progress is stored in backend file storage (`data/progress.json`)
+- Reward form submissions are stored in `data/contact-submissions.json`
+
+### Optional Email Delivery (Resend)
+
+Set these env vars before `npm start`:
+
+- `RESEND_API_KEY`
+- `CONTACT_TO_EMAIL`
+- `CONTACT_FROM_EMAIL` (optional, defaults to `onboarding@resend.dev`)
