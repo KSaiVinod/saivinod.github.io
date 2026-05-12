@@ -1103,15 +1103,21 @@
       inset: 0;
       z-index: 5000;
       background: rgba(0, 0, 0, 0.85);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       backdrop-filter: blur(4px);
       cursor: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, backdrop-filter 0.28s ease;
     }
 
     .modal-backdrop.open {
-      display: flex
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
 
     .modal-box {
@@ -1121,60 +1127,64 @@
       width: 90%;
       position: relative;
       overflow: hidden;
-      animation: modal-in 0.2s ease-out;
+      transform-origin: center center;
+    }
+
+    .modal-backdrop.open .modal-box {
+      animation: modal-zoom-in 0.34s cubic-bezier(0.22, 0.85, 0.32, 1);
     }
 
     .modal-box.popup-open-fx {
-      animation: popup-open-burst 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: popup-zoom-in 0.36s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .modal-box.popup-open-fx::after {
       content: '';
       position: absolute;
-      inset: -35%;
-      background: radial-gradient(circle, rgba(255, 215, 0, 0.26) 0%, rgba(255, 215, 0, 0.12) 30%, rgba(255, 215, 0, 0) 70%);
+      inset: -28%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.08) 42%, rgba(255, 255, 255, 0) 72%);
       pointer-events: none;
-      animation: popup-spark 0.5s ease-out;
+      animation: popup-spark 0.42s ease-out;
     }
 
-    @keyframes popup-open-burst {
+    @keyframes popup-zoom-in {
       0% {
-        transform: scale(0.9) translateY(20px);
-        filter: brightness(1);
+        transform: scale(0.92) translateY(12px);
+        opacity: 0;
       }
 
-      55% {
-        transform: scale(1.02) translateY(-2px);
-        filter: brightness(1.16);
+      70% {
+        transform: scale(1.01) translateY(0);
+        opacity: 1;
       }
 
       100% {
-        transform: scale(1) translateY(0);
-        filter: brightness(1);
+        transform: scale(1);
+        opacity: 1;
       }
     }
 
     @keyframes popup-spark {
       0% {
-        transform: scale(0.35);
-        opacity: 0.9;
+        transform: scale(0.75);
+        opacity: 0.6;
       }
 
       100% {
-        transform: scale(1.05);
+        transform: scale(1.06);
         opacity: 0;
       }
     }
 
-    @keyframes modal-in {
-      from {
-        transform: scale(0.9) translateY(20px);
-        opacity: 0
+    @keyframes modal-zoom-in {
+      0% {
+        transform: scale(0.94) translateY(14px);
+        opacity: 0;
       }
 
-      to {
-        transform: none;
-        opacity: 1
+      100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
       }
     }
 
