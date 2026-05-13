@@ -22,6 +22,7 @@ const ROOT_DIR_RESOLVED = resolve(rootDir);
 const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || '').trim();
 const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || '').trim();
 const VALID_THEMES = ['c1', 'c2', 'c3', 'c4'];
+const ADMIN_ENABLED = Boolean(ADMIN_USERNAME && ADMIN_PASSWORD);
 const ADMIN_SESSION_COOKIE = 'sv_admin_session';
 const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 8;
 
@@ -563,7 +564,7 @@ function computeAnalytics(progressDb, inboxDb) {
 }
 
 await ensureData();
-if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+if (!ADMIN_ENABLED) {
   console.warn('Admin CMS login is disabled until ADMIN_USERNAME and ADMIN_PASSWORD are configured.');
 }
 
@@ -620,9 +621,7 @@ const server = createServer(async (req, res) => {
     }
 
     if (url.pathname === '/api/admin/login' && req.method === 'POST') {
-      if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
-        return sendJson(res, 401, { error: 'invalid_credentials' });
-      }
+      if (!ADMIN_ENABLED) return sendJson(res, 404, { error: 'api_route_not_found' });
       const body = await parseBody(req);
       const username = String(body.username || '').trim();
       const password = String(body.password || '').trim();
@@ -644,16 +643,19 @@ const server = createServer(async (req, res) => {
     }
 
     if (url.pathname === '/api/admin/logout' && req.method === 'POST') {
+      if (!ADMIN_ENABLED) return sendJson(res, 404, { error: 'api_route_not_found' });
       clearAdminSession(req);
       return sendJson(res, 200, { ok: true }, { 'Set-Cookie': getAdminCookieHeader('', true) });
     }
 
     if (url.pathname === '/api/admin/session' && req.method === 'GET') {
+      if (!ADMIN_ENABLED) return sendJson(res, 404, { error: 'api_route_not_found' });
       if (!isAdminAuthenticated(req)) return sendJson(res, 401, { error: 'unauthorized' });
       return sendJson(res, 200, { ok: true, username: ADMIN_USERNAME });
     }
 
     if (url.pathname.startsWith('/api/admin/')) {
+      if (!ADMIN_ENABLED) return sendJson(res, 404, { error: 'api_route_not_found' });
       if (!isAdminAuthenticated(req)) return sendJson(res, 401, { error: 'unauthorized' });
 
       if (url.pathname === '/api/admin/cms' && req.method === 'GET') {
