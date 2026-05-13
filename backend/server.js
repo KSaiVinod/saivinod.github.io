@@ -676,6 +676,24 @@ app.post('/api/contact', async (req, res) => {
   });
 });
 
+// ── Serve static files ────────────────────────────────────────────────────────
+// Must come before catch-all route to serve assets like animData.json
+app.use('/assets', express.static(path.join(FRONTEND_ROOT, 'assets'), {
+  maxAge: '7d',
+  etag: false
+}));
+
+app.use(express.static(FRONTEND_ROOT, {
+  maxAge: '1d',
+  etag: false,
+  setHeaders: (res, path) => {
+    // JSON files should not be cached
+    if (path.endsWith('.json')) {
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
+
 app.get(/^\/(?!api\/|health$|_vercel\/).*/, sendIndex);
 
 // ── 404 fallback ──────────────────────────────────────────────────────────────
