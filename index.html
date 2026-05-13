@@ -1787,136 +1787,26 @@
 
     <div class="currently-wrap">
       <div class="currently-pill">
-        <div class="currently-dot"></div><span class="currently-text">ACTIVE QUEST: <span class="currently-val">SDE @
-            FYNO</span></span>
+        <div class="currently-dot"></div><span class="currently-text">ACTIVE QUEST: <span class="currently-val" id="active-quest-value">SDE @ FYNO</span></span>
       </div>
       <div class="currently-pill">
         <div class="currently-dot" style="background:var(--blue);"></div><span class="currently-text">EXPLORING: <span
-            class="currently-val" style="color:var(--blue)">LLM / REACT NATIVE</span></span>
+            class="currently-val" id="exploring-value" style="color:var(--blue)">LLM / REACT NATIVE</span></span>
       </div>
     </div>
 
-    <div class="quest-list">
-
-      <div class="quest-item active open" onclick="toggleQuest(this)">
+    <div class="quest-list" id="quest-list">
+      <div class="quest-item open">
         <div class="quest-header">
-          <div class="quest-icon">⚡</div>
+          <div class="quest-icon">⏳</div>
           <div class="quest-meta">
-            <div class="quest-company">FYNO</div>
-            <div class="quest-role">Software Development Engineer · Bengaluru</div>
+            <div class="quest-company">LOADING CMS DATA</div>
+            <div class="quest-role">Fetching work experience from CMS...</div>
           </div>
-          <div class="quest-date">AUG 2022<br>PRESENT</div>
+          <div class="quest-date">NOW</div>
           <div class="quest-status status-active">● ACTIVE</div>
         </div>
-        <div class="quest-body">
-          <ul class="quest-bullets">
-            <li>Built socket-based notification system guaranteeing 100% message deliverability</li>
-            <li>Developed Mobile SDKs with custom push rendering, improving delivery rate by 30%</li>
-            <li>Deep-integrated WhatsApp &amp; SMS template management for multiple providers</li>
-            <li>Generalized comms provider APIs with Handlebars for rapid integrations</li>
-            <li>Expert-level knowledge of WhatsApp and RCS APIs across providers</li>
-          </ul>
-          <span class="quest-xp">+1400 XP EARNED</span>
-        </div>
       </div>
-
-      <div class="quest-item" onclick="toggleQuest(this)">
-        <div class="quest-header">
-          <div class="quest-icon">🔍</div>
-          <div class="quest-meta">
-            <div class="quest-company">HIRECT INDIA</div>
-            <div class="quest-role">Senior Software Developer · Bengaluru</div>
-          </div>
-          <div class="quest-date">JUN 2022<br>AUG 2022</div>
-          <div class="quest-status status-done">✓ DONE</div>
-        </div>
-        <div class="quest-body">
-          <ul class="quest-bullets">
-            <li>Designed REST endpoints for jobs &amp; candidate search with filtering and pagination</li>
-            <li>Revamped website — load time slashed from 8–12s to 0.8–1.3s (38% Core Web Vitals improvement)</li>
-          </ul>
-          <span class="quest-xp">+300 XP EARNED</span>
-        </div>
-      </div>
-
-      <div class="quest-item" onclick="toggleQuest(this)">
-        <div class="quest-header">
-          <div class="quest-icon">📊</div>
-          <div class="quest-meta">
-            <div class="quest-company">FACTSET RESEARCH SYSTEMS</div>
-            <div class="quest-role">Software Engineer III · Hyderabad</div>
-          </div>
-          <div class="quest-date">APR 2021<br>JUN 2022</div>
-          <div class="quest-status status-done">✓ DONE</div>
-        </div>
-        <div class="quest-body">
-          <ul class="quest-bullets">
-            <li>Rebuilt application UIs to W3C accessibility standards</li>
-            <li>Delivered financial charts in Vue + ChartIQ with live data streams for thousands of clients</li>
-            <li>Implemented technical studies for charting &amp; advanced financial analysis</li>
-          </ul>
-          <span class="quest-xp">+900 XP EARNED</span>
-        </div>
-      </div>
-
-      <div class="quest-item" onclick="toggleQuest(this)">
-        <div class="quest-header">
-          <div class="quest-icon">☁️</div>
-          <div class="quest-meta">
-            <div class="quest-company">ACTIFIO (GOOGLE CLOUD)</div>
-            <div class="quest-role">Lead Software Engineer · Hyderabad</div>
-          </div>
-          <div class="quest-date">JUN 2019<br>APR 2021</div>
-          <div class="quest-status status-done">✓ DONE</div>
-        </div>
-        <div class="quest-body">
-          <ul class="quest-bullets">
-            <li>Built reusable lazy-load data grid with search, sort &amp; multi-select — adopted app-wide</li>
-            <li>On-demand backup for Generic &amp; SAP Apps — now live on Google Cloud Backup &amp; DR</li>
-          </ul>
-          <span class="quest-xp">+1200 XP EARNED</span>
-        </div>
-      </div>
-
-      <div class="quest-item" onclick="toggleQuest(this)">
-        <div class="quest-header">
-          <div class="quest-icon">🏦</div>
-          <div class="quest-meta">
-            <div class="quest-company">TCS · ICICI BANK</div>
-            <div class="quest-role">Systems Engineer · Hyderabad</div>
-          </div>
-          <div class="quest-date">JUL 2017<br>JUN 2019</div>
-          <div class="quest-status status-done">✓ DONE</div>
-        </div>
-        <div class="quest-body">
-          <ul class="quest-bullets">
-            <li>Developed UPI &amp; UPI 2.0 (Quickpay by ICICI) alongside NPCI</li>
-            <li>Implemented Video KYC &amp; Quick Remittance on Money2India Europe</li>
-            <li>Introduced offline-first mode for RIBG field app via SQLite sync</li>
-          </ul>
-          <span class="quest-xp">+1200 XP EARNED</span>
-        </div>
-      </div>
-
-      <div class="quest-item" onclick="toggleQuest(this)">
-        <div class="quest-header">
-          <div class="quest-icon">🌱</div>
-          <div class="quest-meta">
-            <div class="quest-company">DARWINBOX</div>
-            <div class="quest-role">Frontend Intern · Hyderabad</div>
-          </div>
-          <div class="quest-date">AUG 2016<br>JAN 2017</div>
-          <div class="quest-status status-done">✓ DONE</div>
-        </div>
-        <div class="quest-body">
-          <ul class="quest-bullets">
-            <li>Built auto-invoicing module for pay-as-you-go SaaS billing</li>
-            <li>Developed and launched the initial Darwinbox marketing website</li>
-          </ul>
-          <span class="quest-xp">+500 XP EARNED</span>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -1931,91 +1821,21 @@
       <div class="section-rule" style="background:linear-gradient(90deg,var(--accent2),transparent)"></div>
     </div>
 
-    <div class="chest-grid">
-
-      <div class="chest chest-c1" data-chest-id="ownhook" onclick="openChest('ownhook')">
+    <div class="chest-grid" id="project-grid">
+      <div class="chest chest-c1">
         <div class="chest-lid"></div>
         <div class="chest-corner tl"></div>
         <div class="chest-corner tr"></div>
         <div class="chest-corner bl"></div>
         <div class="chest-corner br"></div>
-        <div class="chest-icon-wrap">🪝</div>
-        <div class="chest-name">OWNHOOK</div>
-        <div class="chest-type">DEVELOPER TOOL · SAAS</div>
-        <div class="chest-desc">All-in-one webhook testing platform. Create unlimited personal endpoints, inspect
-          payloads in real-time, forward hooks, define custom responders and mock entire APIs. No restrictions.</div>
-        <div class="chest-tags">
-          <span class="chest-tag">WEBSOCKETS</span>
-          <span class="chest-tag">MOCK API</span>
-          <span class="chest-tag">REAL-TIME</span>
-          <span class="chest-tag">NODE.JS</span>
-        </div>
+        <div class="chest-icon-wrap">⏳</div>
+        <div class="chest-name">LOADING PROJECTS</div>
+        <div class="chest-type">CMS DATA</div>
+        <div class="chest-desc">Fetching project cards from CMS...</div>
+        <div class="chest-tags"><span class="chest-tag">LOADING</span></div>
         <button class="chest-action">▶ OPEN CHEST</button>
-        <div class="chest-date">2025 — APR 2026</div>
+        <div class="chest-date">NOW</div>
       </div>
-
-      <div class="chest chest-c3" data-chest-id="meshcall" onclick="openChest('meshcall')">
-        <div class="chest-lid"></div>
-        <div class="chest-corner tl"></div>
-        <div class="chest-corner tr"></div>
-        <div class="chest-corner bl"></div>
-        <div class="chest-corner br"></div>
-        <div class="chest-icon-wrap">📡</div>
-        <div class="chest-name">MESHCALL</div>
-        <div class="chest-type">P2P · WEBRTC APP</div>
-        <div class="chest-desc">Calling &amp; messaging for congested environments — concerts, crowd gatherings, weak
-          signal areas. Peers connect directly via WebRTC mesh topology. No internet infrastructure needed.</div>
-        <div class="chest-tags">
-          <span class="chest-tag">WEBRTC</span>
-          <span class="chest-tag">P2P MESH</span>
-          <span class="chest-tag">OFFLINE-FIRST</span>
-        </div>
-        <button class="chest-action">▶ OPEN CHEST</button>
-        <div class="chest-date">2024 — JUN 2025</div>
-      </div>
-
-      <div class="chest chest-c2" data-chest-id="biolinks" onclick="openChest('biolinks')">
-        <div class="chest-lid"></div>
-        <div class="chest-corner tl"></div>
-        <div class="chest-corner tr"></div>
-        <div class="chest-corner bl"></div>
-        <div class="chest-corner br"></div>
-        <div class="chest-icon-wrap">🔗</div>
-        <div class="chest-name">BIOLINKS</div>
-        <div class="chest-type">OPEN SOURCE · LINK PLATFORM</div>
-        <div class="chest-desc">Full-featured open-source Linktree alternative with full UI customization —
-          glassmorphism, neumorphism and pop themes. Live Spotify &amp; YouTube embeds with stats, social media
-          integrations.</div>
-        <div class="chest-tags">
-          <span class="chest-tag">OPEN SOURCE</span>
-          <span class="chest-tag">SPOTIFY API</span>
-          <span class="chest-tag">YOUTUBE API</span>
-          <span class="chest-tag">CSS THEMES</span>
-        </div>
-        <button class="chest-action">▶ OPEN CHEST</button>
-        <div class="chest-date">AUG 2020</div>
-      </div>
-
-      <div class="chest chest-c4" data-chest-id="kakeibo" onclick="openChest('kakeibo')">
-        <div class="chest-lid"></div>
-        <div class="chest-corner tl"></div>
-        <div class="chest-corner tr"></div>
-        <div class="chest-corner bl"></div>
-        <div class="chest-corner br"></div>
-        <div class="chest-icon-wrap">💴</div>
-        <div class="chest-name">KAKEIBO MM</div>
-        <div class="chest-type">FINTECH · EXPENSE MANAGER</div>
-        <div class="chest-desc">Expense manager inspired by the Japanese kakeibo budgeting philosophy. Smart
-          auto-reminders for recurring bills based on your spending history and patterns.</div>
-        <div class="chest-tags">
-          <span class="chest-tag">REACT</span>
-          <span class="chest-tag">NODE.JS</span>
-          <span class="chest-tag">BUDGETING</span>
-        </div>
-        <button class="chest-action" style="color:#1a1a00">▶ OPEN CHEST</button>
-        <div class="chest-date">AUG 2021 — FEB 2022</div>
-      </div>
-
     </div>
   </section>
 
@@ -2218,6 +2038,7 @@
       <a href="https://github.com/KSaiVinod" target="_blank" class="guild-link gl-github">⚙ GITHUB / KSAIVINOD</a>
       <a href="https://linkedin.com/in/saivinodk" target="_blank" class="guild-link gl-linkedin">🛡 LINKEDIN /
         SAIVINODK</a>
+      <a href="/admin/" class="guild-link gl-email">🧭 ADMIN CMS</a>
     </div>
     <div class="reward-panel" id="reward-panel">
       <div class="reward-status" id="reward-status">🔒 REWARD LOCKED · SCROLL TO THE BOTTOM TO OPEN CONTACT QUEST</div>
@@ -2638,53 +2459,126 @@
       draw();
     }
 
-    // Chest modals
-    const chestData = {
-      ownhook: {
-        pre: '// LEGENDARY ITEM',
-        title: 'OWNHOOK',
-        sub: 'WEBHOOK TESTING PLATFORM · DEVELOPER TOOL',
-        color: '#00f5c4',
-        body: 'The all-in-one webhook testing and debugging platform. Create unlimited personal webhook endpoints instantly. Watch incoming payloads stream in real-time, forward webhooks to any destination, define custom response rules, and mock entire APIs — all without any account restrictions or rate limits. Built for developers who are tired of hitting walls on webhook.site.',
-        tags: ['WEBSOCKETS', 'REAL-TIME STREAMING', 'MOCK API ENGINE', 'CUSTOM RESPONDERS', 'HOOK FORWARDER', 'NODE.JS', 'EXPRESS', 'MONGODB'],
-        status: 'COMPLETED',
-        xp: '+800 XP'
-      },
-      meshcall: {
-        pre: '// EPIC ITEM',
-        title: 'MESHCALL',
-        sub: 'P2P CALLING & MESSAGING APP · WEBRTC',
-        color: '#a855f7',
-        body: 'A WebRTC-powered peer-to-peer calling and messaging application designed specifically for high-congestion environments — concerts, crowded markets, sports events, areas with weak or saturated network signals. Peers discover each other and connect directly via a mesh network topology, routing audio and messages without relying on any internet backbone. Built for me and my friends to stay connected when conventional apps fail.',
-        tags: ['WEBRTC', 'P2P MESH TOPOLOGY', 'OFFLINE-FIRST', 'SIGNALING SERVER', 'ICE/STUN/TURN', 'JAVASCRIPT', 'LOW-LATENCY AUDIO'],
-        status: 'COMPLETED',
-        xp: '+900 XP'
-      },
-      biolinks: {
-        pre: '// RARE ITEM · OPEN SOURCE',
-        title: 'BIOLINKS',
-        sub: 'OPEN SOURCE LINK PLATFORM · FULL CUSTOMIZATION',
-        color: '#ff6b35',
-        body: 'A full-featured open-source alternative to Linktree and bio.link — built with actual design ambition. Users get complete control over UI themes: glassmorphism, neumorphism, and vibrant pop aesthetics. Not just links — embed your live Spotify listening status, YouTube channel stats, and rich media from any social platform. Analytics track every click by device, OS, and location. Shut down in 2020 but the code lives on.',
-        tags: ['OPEN SOURCE', 'SPOTIFY API', 'YOUTUBE DATA API', 'GLASSMORPHISM', 'NEUMORPHISM', 'CSS THEMES', 'CLICK ANALYTICS', 'VUE.JS'],
-        status: 'ARCHIVED · 2020',
-        xp: '+600 XP'
-      },
-      kakeibo: {
-        pre: '// UNCOMMON ITEM',
-        title: 'KAKEIBO MM',
-        sub: 'EXPENSE MANAGER · JAPANESE BUDGETING',
-        color: '#ffd700',
-        body: 'An expense tracking app inspired by Kakeibo — the Japanese art of mindful money management. The philosophy is simple: write down what you earn, what you spend, and reflect. The app adds modern utility on top: intelligent auto-reminders for recurring bills, spending pattern analysis, and category-aware budget tracking built around the four Kakeibo pillars.',
-        tags: ['REACT', 'NODE.JS', 'EXPRESS', 'MONGODB', 'PUSH NOTIFICATIONS', 'RECURRING BILLING', 'BUDGETING LOGIC'],
-        status: 'COMPLETED · FEB 2022',
-        xp: '+500 XP'
-      }
-    };
+    // Chest modals + CMS driven content
+    const chestData = {};
     const chestElementMap = new Map();
+    const CMS_ENDPOINT = `${API_BASE}/api/cms`;
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderExperiences(experiences) {
+      const questList = document.getElementById('quest-list');
+      if (!questList) return;
+      if (!Array.isArray(experiences) || experiences.length === 0) return;
+      questList.innerHTML = experiences.map((item, index) => {
+        const questId = item.id || `quest-${index + 1}`;
+        const status = String(item.status || '').toLowerCase() === 'active' ? 'active' : 'done';
+        const statusText = status === 'active' ? '● ACTIVE' : '✓ DONE';
+        const statusClass = status === 'active' ? 'status-active' : 'status-done';
+        const rowClass = `${status === 'active' ? ' active open' : ''}`;
+        const roleText = [item.role, item.location].filter(Boolean).join(' · ');
+        const dateText = `${escapeHtml(item.start || '')}<br>${escapeHtml(item.end || '')}`;
+        const bullets = Array.isArray(item.bullets) ? item.bullets : [];
+        const bulletHtml = bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join('');
+        return `
+          <div class="quest-item${rowClass}" data-quest-id="${escapeHtml(questId)}" onclick="toggleQuest(this)">
+            <div class="quest-header">
+              <div class="quest-icon">${escapeHtml(item.icon || '⚡')}</div>
+              <div class="quest-meta">
+                <div class="quest-company">${escapeHtml(item.company || '')}</div>
+                <div class="quest-role">${escapeHtml(roleText)}</div>
+              </div>
+              <div class="quest-date">${dateText}</div>
+              <div class="quest-status ${statusClass}">${statusText}</div>
+            </div>
+            <div class="quest-body">
+              <ul class="quest-bullets">${bulletHtml}</ul>
+              <span class="quest-xp">${escapeHtml(item.xpText || '')}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderProjects(projects) {
+      const projectGrid = document.getElementById('project-grid');
+      if (!projectGrid) return;
+      if (!Array.isArray(projects) || projects.length === 0) return;
+      projectGrid.innerHTML = projects.map((project) => {
+        const theme = ['c1', 'c2', 'c3', 'c4'].includes(project.theme) ? project.theme : 'c1';
+        const tags = Array.isArray(project.tags) ? project.tags : [];
+        const tagsHtml = tags.map((tag) => `<span class="chest-tag">${escapeHtml(tag)}</span>`).join('');
+        const escapedId = escapeHtml(project.id || '');
+        return `
+          <div class="chest chest-${theme}" data-chest-id="${escapedId}" onclick="openChest('${escapedId}')">
+            <div class="chest-lid"></div>
+            <div class="chest-corner tl"></div>
+            <div class="chest-corner tr"></div>
+            <div class="chest-corner bl"></div>
+            <div class="chest-corner br"></div>
+            <div class="chest-icon-wrap">${escapeHtml(project.icon || '🧩')}</div>
+            <div class="chest-name">${escapeHtml(project.name || '')}</div>
+            <div class="chest-type">${escapeHtml(project.type || '')}</div>
+            <div class="chest-desc">${escapeHtml(project.summary || '')}</div>
+            <div class="chest-tags">${tagsHtml}</div>
+            <button class="chest-action">▶ OPEN CHEST</button>
+            <div class="chest-date">${escapeHtml(project.date || '')}</div>
+          </div>
+        `;
+      }).join('');
+      setupChestMap();
+    }
+
+    function hydrateChestData(projects) {
+      Object.keys(chestData).forEach((key) => delete chestData[key]);
+      (Array.isArray(projects) ? projects : []).forEach((project) => {
+        if (!project || !project.id) return;
+        chestData[project.id] = {
+          pre: project.modalPre || '// ITEM',
+          title: project.name || '',
+          sub: project.modalSub || '',
+          color: project.color || '#00f5c4',
+          body: project.modalBody || '',
+          tags: Array.isArray(project.tags) ? project.tags : [],
+          status: project.modalStatus || '',
+          xp: project.modalXp || ''
+        };
+      });
+    }
+
+    async function hydrateCmsData() {
+      try {
+        const res = await fetch(CMS_ENDPOINT);
+        if (!res.ok) throw new Error('cms_fetch_failed');
+        const payload = await res.json();
+        const cms = payload && payload.cms ? payload.cms : {};
+        if (cms.profile) {
+          const activeQuest = document.getElementById('active-quest-value');
+          const exploring = document.getElementById('exploring-value');
+          if (activeQuest && cms.profile.activeQuest) activeQuest.textContent = cms.profile.activeQuest;
+          if (exploring && cms.profile.exploring) exploring.textContent = cms.profile.exploring;
+        }
+        renderExperiences(cms.experiences || []);
+        renderProjects(cms.projects || []);
+        hydrateChestData(cms.projects || []);
+      } catch (err) {
+        showToast('CMS OFFLINE · USING DEFAULT VIEW');
+      }
+    }
 
     function openChest(id) {
       const d = chestData[id];
+      if (!d) {
+        showToast('PROJECT DATA NOT AVAILABLE');
+        return;
+      }
       document.getElementById('modal-pre').textContent = d.pre;
       document.getElementById('modal-title').textContent = d.title;
       document.getElementById('modal-title').style.color = d.color;
@@ -2744,13 +2638,8 @@
       persistLocal();
     }
 
-    function setupQuestIds() {
-      document.querySelectorAll('.quest-item').forEach((item, index) => {
-        item.dataset.questId = `quest-${index + 1}`;
-      });
-    }
-
     function setupChestMap() {
+      chestElementMap.clear();
       document.querySelectorAll('.chest').forEach((chest) => {
         const chestId = chest.dataset.chestId;
         if (chestId) chestElementMap.set(chestId, chest);
@@ -2809,8 +2698,7 @@
     }
 
     (async function init() {
-      setupQuestIds();
-      setupChestMap();
+      await hydrateCmsData();
       await hydrateProgress();
       setupSectionTracking();
       setupZeldaGame();

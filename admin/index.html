@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Admin CMS</title>
+  <style>
+    :root {
+      --bg: #090914;
+      --panel: #121226;
+      --panel2: #1b1b34;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #00f5c4;
+      --accent2: #ff6b35;
+      --border: rgba(224, 231, 255, 0.2);
+      --danger: #ef4444;
+      --ok: #22c55e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(circle at top, #101020, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1,h2 { margin: 0; }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .col-6 { grid-column: span 6; }
+    .col-12 { grid-column: span 12; }
+    .col-4 { grid-column: span 4; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    input, textarea, button {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel2);
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 260px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      line-height: 1.5;
+      resize: vertical;
+    }
+
+    button {
+      width: auto;
+      cursor: pointer;
+      border-color: rgba(0, 245, 196, 0.45);
+      background: rgba(0, 245, 196, 0.15);
+      font-weight: 600;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      border-color: rgba(255, 107, 53, 0.45);
+      background: rgba(255, 107, 53, 0.15);
+    }
+
+    .btn-danger {
+      border-color: rgba(239, 68, 68, 0.45);
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #151530;
+    }
+
+    .stat .k { font-size: 12px; color: var(--muted); }
+    .stat .v { font-size: 20px; margin-top: 6px; font-weight: 700; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    .auth-card {
+      max-width: 420px;
+      margin: 40px auto;
+    }
+
+    .hidden { display: none !important; }
+
+    .msg {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .msg.ok { border-color: rgba(34, 197, 94, 0.55); color: var(--ok); }
+    .msg.err { border-color: rgba(239, 68, 68, 0.55); color: var(--danger); }
+
+    @media (max-width: 980px) {
+      .col-6, .col-4 { grid-column: span 12; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="login-view" class="panel auth-card">
+      <h1>Admin Login</h1>
+      <p class="muted">Use your admin credentials to access CMS, submissions, and analytics.</p>
+      <form id="login-form">
+        <label for="login-username">Username</label>
+        <input id="login-username" name="username" autocomplete="username" required value="admin" />
+        <label for="login-password" style="margin-top:10px;">Password</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+        <div class="btn-row" style="margin-top:12px;">
+          <button type="submit">Login</button>
+        </div>
+      </form>
+      <div id="login-msg" class="msg hidden"></div>
+    </div>
+
+    <div id="app-view" class="hidden">
+      <div class="header">
+        <div>
+          <h1>Portfolio Admin CMS</h1>
+          <div class="muted">Manage frontend content, monitor submissions, and track engagement analytics.</div>
+        </div>
+        <div class="btn-row">
+          <button id="reload-btn" class="btn-secondary" type="button">Reload</button>
+          <button id="logout-btn" class="btn-danger" type="button">Logout</button>
+        </div>
+      </div>
+
+      <div id="app-msg" class="msg hidden"></div>
+
+      <div class="panel">
+        <h2>Analytics</h2>
+        <div id="analytics-stats" class="stats" style="margin-top:12px;"></div>
+        <div class="grid" style="margin-top:14px;">
+          <div class="col-6">
+            <h3 style="margin:0 0 8px 0;">Top Visited Sections</h3>
+            <ul id="top-sections" class="muted" style="margin:0;padding-left:18px;"></ul>
+          </div>
+          <div class="col-6">
+            <h3 style="margin:0 0 8px 0;">Top Opened Experiences</h3>
+            <ul id="top-quests" class="muted" style="margin:0;padding-left:18px;"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>CMS Content</h2>
+        <p class="muted">Update profile highlights plus structured work experience and project data used by the public portfolio.</p>
+        <form id="cms-form" class="grid">
+          <div class="col-6">
+            <label for="active-quest">Active Quest</label>
+            <input id="active-quest" />
+          </div>
+          <div class="col-6">
+            <label for="exploring">Exploring</label>
+            <input id="exploring" />
+          </div>
+          <div class="col-6">
+            <label for="experiences-json">Experiences JSON Array</label>
+            <textarea id="experiences-json" spellcheck="false"></textarea>
+          </div>
+          <div class="col-6">
+            <label for="projects-json">Projects JSON Array</label>
+            <textarea id="projects-json" spellcheck="false"></textarea>
+          </div>
+          <div class="col-12">
+            <div class="btn-row">
+              <button type="submit">Save CMS Data</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Contact Submissions</h2>
+        <div style="overflow:auto; margin-top:10px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Created</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Session</th>
+                <th>Level</th>
+                <th>XP</th>
+              </tr>
+            </thead>
+            <tbody id="submissions-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+
+    const loginView = document.getElementById('login-view');
+    const appView = document.getElementById('app-view');
+    const loginMsg = document.getElementById('login-msg');
+    const appMsg = document.getElementById('app-msg');
+
+    function setMessage(el, text, type = 'ok') {
+      el.textContent = text;
+      el.className = `msg ${type}`;
+      el.classList.remove('hidden');
+    }
+
+    function clearMessage(el) {
+      el.textContent = '';
+      el.className = 'msg hidden';
+    }
+
+    async function request(path, options = {}) {
+      const res = await fetch(`${API_BASE}${path}`, {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        ...options
+      });
+      const text = await res.text();
+      let data = {};
+      try { data = text ? JSON.parse(text) : {}; } catch { data = {}; }
+      if (!res.ok) {
+        const error = data?.error || `request_failed_${res.status}`;
+        throw new Error(error);
+      }
+      return data;
+    }
+
+    function showApp(visible) {
+      loginView.classList.toggle('hidden', visible);
+      appView.classList.toggle('hidden', !visible);
+    }
+
+    function formatJson(value) {
+      return JSON.stringify(value || [], null, 2);
+    }
+
+    function renderAnalytics(analytics = {}) {
+      const stats = [
+        { key: 'Total Sessions', value: analytics.totalSessions ?? 0 },
+        { key: 'Total Submissions', value: analytics.totalSubmissions ?? 0 },
+        { key: 'Avg XP / Session', value: analytics.averageXp ?? 0 },
+        { key: 'Max XP', value: analytics.maxXp ?? 0 }
+      ];
+
+      const statsEl = document.getElementById('analytics-stats');
+      statsEl.innerHTML = '';
+      stats.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'stat';
+        div.innerHTML = `<div class="k">${item.key}</div><div class="v">${item.value}</div>`;
+        statsEl.appendChild(div);
+      });
+
+      const topSections = document.getElementById('top-sections');
+      const topQuests = document.getElementById('top-quests');
+      topSections.innerHTML = '';
+      topQuests.innerHTML = '';
+
+      (analytics.topVisitedSections || []).forEach((row) => {
+        const li = document.createElement('li');
+        li.textContent = `${row.section}: ${row.count}`;
+        topSections.appendChild(li);
+      });
+      (analytics.topOpenedExperiences || []).forEach((row) => {
+        const li = document.createElement('li');
+        li.textContent = `${row.quest}: ${row.count}`;
+        topQuests.appendChild(li);
+      });
+
+      if (!topSections.children.length) topSections.innerHTML = '<li>No section activity yet</li>';
+      if (!topQuests.children.length) topQuests.innerHTML = '<li>No experience-open activity yet</li>';
+    }
+
+    function renderSubmissions(submissions = []) {
+      const body = document.getElementById('submissions-body');
+      body.innerHTML = '';
+      submissions.forEach((item) => {
+        const tr = document.createElement('tr');
+        const cols = [
+          item.createdAt || '-',
+          item.name || '-',
+          item.email || '-',
+          item.message || '-',
+          item.sessionId || '-',
+          item.level ?? '-',
+          item.xp ?? '-'
+        ];
+        cols.forEach((val) => {
+          const td = document.createElement('td');
+          td.textContent = String(val);
+          tr.appendChild(td);
+        });
+        body.appendChild(tr);
+      });
+      if (!submissions.length) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 7;
+        td.className = 'muted';
+        td.textContent = 'No submissions yet';
+        tr.appendChild(td);
+        body.appendChild(tr);
+      }
+    }
+
+    function renderCms(cms) {
+      document.getElementById('active-quest').value = cms?.profile?.activeQuest || '';
+      document.getElementById('exploring').value = cms?.profile?.exploring || '';
+      document.getElementById('experiences-json').value = formatJson(cms?.experiences || []);
+      document.getElementById('projects-json').value = formatJson(cms?.projects || []);
+    }
+
+    async function loadAdminData() {
+      const [cmsRes, submissionsRes, analyticsRes] = await Promise.all([
+        request('/api/admin/cms'),
+        request('/api/admin/submissions'),
+        request('/api/admin/analytics')
+      ]);
+      renderCms(cmsRes.cms || {});
+      renderSubmissions(submissionsRes.submissions || []);
+      renderAnalytics(analyticsRes.analytics || {});
+    }
+
+    async function checkSession() {
+      try {
+        await request('/api/admin/session');
+        showApp(true);
+        await loadAdminData();
+      } catch {
+        showApp(false);
+      }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearMessage(loginMsg);
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      try {
+        await request('/api/admin/login', {
+          method: 'POST',
+          body: JSON.stringify({ username, password })
+        });
+        showApp(true);
+        await loadAdminData();
+      } catch (err) {
+        setMessage(loginMsg, `Login failed: ${err.message}`, 'err');
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      try {
+        await request('/api/admin/logout', { method: 'POST' });
+      } catch {}
+      showApp(false);
+    });
+
+    document.getElementById('reload-btn').addEventListener('click', async () => {
+      clearMessage(appMsg);
+      try {
+        await loadAdminData();
+        setMessage(appMsg, 'Data reloaded.', 'ok');
+      } catch (err) {
+        setMessage(appMsg, `Reload failed: ${err.message}`, 'err');
+      }
+    });
+
+    document.getElementById('cms-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearMessage(appMsg);
+      let experiences;
+      let projects;
+      try {
+        experiences = JSON.parse(document.getElementById('experiences-json').value || '[]');
+        projects = JSON.parse(document.getElementById('projects-json').value || '[]');
+      } catch (err) {
+        setMessage(appMsg, 'Invalid JSON in experiences/projects. Please fix and try again.', 'err');
+        return;
+      }
+
+      const payload = {
+        cms: {
+          profile: {
+            activeQuest: document.getElementById('active-quest').value.trim(),
+            exploring: document.getElementById('exploring').value.trim()
+          },
+          experiences,
+          projects
+        }
+      };
+
+      try {
+        const res = await request('/api/admin/cms', {
+          method: 'PUT',
+          body: JSON.stringify(payload)
+        });
+        renderCms(res.cms || payload.cms);
+        await loadAdminData();
+        setMessage(appMsg, 'CMS data saved successfully.', 'ok');
+      } catch (err) {
+        setMessage(appMsg, `Save failed: ${err.message}`, 'err');
+      }
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>

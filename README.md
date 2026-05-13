@@ -243,3 +243,22 @@ Set these env vars before `npm start`:
 - `RESEND_API_KEY`
 - `CONTACT_TO_EMAIL`
 - `CONTACT_FROM_EMAIL` (optional, defaults to `onboarding@resend.dev`)
+
+## 🛠 Admin CMS Panel
+
+- Open: `http://localhost:3000/admin/`
+- Default login (change via env vars):
+  - `ADMIN_USERNAME=admin`
+  - `ADMIN_PASSWORD=admin123`
+- CMS data is stored in: `data/cms.json`
+- Frontend experience + project sections render from backend CMS API (`/api/cms`)
+
+### Admin APIs (authenticated)
+
+- `POST /api/admin/login`
+- `POST /api/admin/logout`
+- `GET /api/admin/session`
+- `GET /api/admin/cms`
+- `PUT /api/admin/cms`
+- `GET /api/admin/submissions`
+- `GET /api/admin/analytics`
