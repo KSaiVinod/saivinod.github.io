@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createReadStream, existsSync } from 'node:fs';
-import { extname, join, dirname, resolve } from 'node:path';
+import { extname, join, dirname, resolve, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 
@@ -490,10 +490,8 @@ function serveStatic(pathname, res) {
   }
   const relativePath = path.replace(/^\/+/, '');
   const filePath = resolve(rootDir, relativePath);
-  const useCaseInsensitiveCheck = process.platform === 'win32' || process.platform === 'darwin';
-  const rootPathForCheck = useCaseInsensitiveCheck ? ROOT_DIR_RESOLVED.toLowerCase() : ROOT_DIR_RESOLVED;
-  const filePathForCheck = useCaseInsensitiveCheck ? filePath.toLowerCase() : filePath;
-  if (!filePathForCheck.startsWith(`${rootPathForCheck}/`) && filePathForCheck !== rootPathForCheck) {
+  const relativeToRoot = relative(ROOT_DIR_RESOLVED, filePath);
+  if (relativeToRoot.startsWith('..') || isAbsolute(relativeToRoot)) {
     sendJson(res, 403, { error: 'forbidden' });
     return;
   }
@@ -565,6 +563,9 @@ function computeAnalytics(progressDb, inboxDb) {
 }
 
 await ensureData();
+if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+  console.warn('Admin CMS login is disabled until ADMIN_USERNAME and ADMIN_PASSWORD are configured.');
+}
 
 const server = createServer(async (req, res) => {
   try {
@@ -620,7 +621,7 @@ const server = createServer(async (req, res) => {
 
     if (url.pathname === '/api/admin/login' && req.method === 'POST') {
       if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
-        return sendJson(res, 503, { error: 'admin_not_configured' });
+        return sendJson(res, 401, { error: 'invalid_credentials' });
       }
       const body = await parseBody(req);
       const username = String(body.username || '').trim();

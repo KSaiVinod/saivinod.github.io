@@ -406,7 +406,7 @@
       event.preventDefault();
       clearMessage(loginMsg);
       const username = document.getElementById('login-username').value.trim();
-      const password = document.getElementById('login-password').value;
+      const password = document.getElementById('login-password').value.trim();
       try {
         await request('/api/admin/login', {
           method: 'POST',
