@@ -247,9 +247,9 @@ Set these env vars before `npm start`:
 ## 🛠 Admin CMS Panel
 
 - Open: `http://localhost:3000/admin/`
-- Default login (change via env vars):
-  - `ADMIN_USERNAME=admin`
-  - `ADMIN_PASSWORD=admin123`
+- Required env vars for admin login:
+  - `ADMIN_USERNAME`
+  - `ADMIN_PASSWORD`
 - CMS data is stored in: `data/cms.json`
 - Frontend experience + project sections render from backend CMS API (`/api/cms`)
 

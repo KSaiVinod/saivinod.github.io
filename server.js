@@ -19,8 +19,9 @@ const MAX_PROGRESS_LIST_LENGTH = 200;
 const MAX_SESSION_XP = 4200;
 const ROOT_DIR_RESOLVED = resolve(rootDir);
 
-const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || 'admin').trim();
-const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || 'admin123').trim();
+const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || '').trim();
+const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || '').trim();
+const VALID_THEMES = ['c1', 'c2', 'c3', 'c4'];
 const ADMIN_SESSION_COOKIE = 'sv_admin_session';
 const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 8;
 
@@ -245,7 +246,7 @@ function sanitizeProjectItem(item, index) {
   const source = item && typeof item === 'object' ? item : {};
   const idRaw = sanitizeString(source.id || `project-${index + 1}`, 80).replace(/[^a-zA-Z0-9_-]/g, '-');
   const themeRaw = sanitizeString(source.theme || 'c1', 10).toLowerCase().replace(/[^a-z0-9]/g, '');
-  const theme = ['c1', 'c2', 'c3', 'c4'].includes(themeRaw) ? themeRaw : 'c1';
+  const theme = VALID_THEMES.includes(themeRaw) ? themeRaw : 'c1';
   const color = sanitizeString(source.color || '#00f5c4', 16);
   return {
     id: idRaw || `project-${index + 1}`,
@@ -618,6 +619,9 @@ const server = createServer(async (req, res) => {
     }
 
     if (url.pathname === '/api/admin/login' && req.method === 'POST') {
+      if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+        return sendJson(res, 503, { error: 'admin_not_configured' });
+      }
       const body = await parseBody(req);
       const username = String(body.username || '').trim();
       const password = String(body.password || '').trim();
